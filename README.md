@@ -5,3 +5,5 @@ A repository for my assignments and projects for the [General Assembly Data Scie
 ### assignment0
 Basic about me
 
+### assignment1
+Quick overview of anomaly detection algorithm
