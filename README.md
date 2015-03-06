@@ -10,3 +10,6 @@ Quick overview of anomaly detection algorithm
 
 ### assignment 2
 An analysis of DC bike share data from 2011 and 2012
+
+### assignemnt 4
+A review of the Project 1 notebooks for other team members.
