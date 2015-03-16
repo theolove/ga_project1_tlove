@@ -174,7 +174,6 @@ class Linear(object):
                 sig_cols.append(f)
                 fscores.append(pval[0][0])
                 pvals.append(pval[1][0])
-                r2_scores.append()
 
         return pd.DataFrame({'features' : sig_cols, 'p-values' : pvals, 'F score' : fscores })
 
