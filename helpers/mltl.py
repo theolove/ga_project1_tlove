@@ -162,16 +162,15 @@ class Linear(object):
     def __init__(self):
         pass
 
-
-    def f_test(self, X, y, ci=0.1):
-        """Return the signficant columns of X in a regresion against y with confidence interval ci"""
+    def f_test(self, X, y, ci=0.9):
+        """Return the signficant columns of X in a linear regression against y with confidence interval ci"""
         pvals = []
         fscores = []
         sig_cols = []
 
         for f in list(X.columns):
             pval = f_select.f_regression(X[f], y)
-            if pval[1][0] < ci:
+            if pval[1][0] < (1 - ci):
                 sig_cols.append(f)
                 fscores.append(pval[0][0])
                 pvals.append(pval[1][0])
