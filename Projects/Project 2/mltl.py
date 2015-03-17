@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 import statsmodels.formula.api as smf
 from sklearn import feature_selection
-from sklearn import linear_model as lm
+from sklearn import linear_model
 from sklearn import tree, dummy, metrics, cross_validation
 
 class Transformations(object):
@@ -162,11 +162,14 @@ class Linear(object):
         pass
 
     def f_test(self, X, y, ci=0.9):
-        """Return the signficant columns of X in a linear regression against y with confidence interval ci"""
+        """Return the signficant columns of X in a linear regression against y with confidence interval ci
+        Requires both X and y to be a data frame
+        """
         sig_cols = []
         pvals = []
         fscores = []
         r2_scores = []
+        lm = linear_model.LinearRegression()
 
         for f in list(X.columns):
             pval = feature_selection.f_regression(X[f], y)
@@ -174,8 +177,10 @@ class Linear(object):
                 sig_cols.append(f)
                 fscores.append(pval[0][0])
                 pvals.append(pval[1][0])
+                lm.fit(X[[f]], y)
+                r2_scores.append(metrics.r2_score(y, lm.predict(X[[f]])))
 
-        return pd.DataFrame({'features' : sig_cols, 'p-values' : pvals, 'F score' : fscores })
+        return pd.DataFrame({'features' : sig_cols, 'p-values' : pvals, 'F score' : fscores, 'r2': r2_scores})
 
     def smf_linear(self, X, y):
         """
@@ -184,4 +189,3 @@ class Linear(object):
         """
         return smf.ols(formula= ''.join(y.columns) + ' ~ ' + ' + '.join(X.columns),
                         data=y.join(X)).fit()
-
