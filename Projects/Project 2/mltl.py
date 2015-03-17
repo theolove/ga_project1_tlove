@@ -12,7 +12,7 @@ from sklearn import tree, dummy, metrics, cross_validation
 
 class Transformations(object):
     """
-    A class of basic transformations
+    A class of basic transformations on pandas Series
     """
 
     def __init__(self):
@@ -20,23 +20,24 @@ class Transformations(object):
 
     def mean_at_zero(self, arr):
         """Return an array shifted so that the mean of the array is 0"""
-        return np.array([i - np.mean(arr) for i in arr])
+        return arr - arr.mean()
 
     def norm_to_min_zero(self, arr):
         """Return an array normalized to 0 and 1 (where 0 remains 0)"""
-        return np.array([i / max(arr) for i in arr])
+        return arr / arr.max()
     
     def norm_to_absolute_min_zero(self, arr):
         """Return an array normalized to 0 and 1 (where min == 0)"""
-        return np.array([(i - min(arr)) / (max(arr) - min(arr)) for i in arr])
+        return (arr - arr.min()) / (arr.max() - arr.min())
     
     def norm_to_neg_pos(self, arr):
         """Returns an array normalized to -1 and 1 (where mean == 0)"""
-        return np.array([(i - mean(arr)) / (max(arr) - mean(arr)) for i in arr])
+        return (arr - arr.mean()) / (arr.max() - arr.mean())
     
     def norm_by_std(self, arr):
         """Returns an array standardized using mean and standard deviation (where mean = 0)"""
-        return np.array([(i-mean(arr))/np.std(arr) for i in arr])
+        return (arr - arr.mean()) / arr.std()
+
 
 class Classification(object):
     """Generic classification model helpers"""
@@ -180,12 +181,14 @@ class Linear(object):
                 lm.fit(X[[f]], y)
                 r2_scores.append(metrics.r2_score(y, lm.predict(X[[f]])))
 
-        return pd.DataFrame({'features' : sig_cols, 'p-values' : pvals, 'F score' : fscores, 'r2': r2_scores})
+        return pd.DataFrame({'feature' : sig_cols, 'p-value' : pvals, 'F score' : fscores, 'r2': r2_scores})
 
-    def smf_linear(self, X, y):
+    def smf_linear(self, X, y, df):
         """
-        takes a pandas data frame of independent (X) variables and a dependent variable (y)
+        takes list of independent columns, X (list of strings), and a dependent column y (string) from DataFrame df
         returns the statsmodel linear model fit
         """
-        return smf.ols(formula= ''.join(y.columns) + ' ~ ' + ' + '.join(X.columns),
-                        data=y.join(X)).fit()
+        form = y + ' ~ ' + ' + '.join(X)
+        print form
+        return smf.ols(formula=form,
+                        data=df).fit()
