@@ -6,9 +6,7 @@ Date: 3/12/15
 import pandas as pd
 import numpy as np
 import statsmodels.formula.api as smf
-from sklearn import feature_selection
-from sklearn import linear_model
-from sklearn import tree, dummy, metrics, cross_validation
+from sklearn import tree, dummy, metrics, cross_validation, linear_model, feature_selection
 
 class Transformations(object):
     """
