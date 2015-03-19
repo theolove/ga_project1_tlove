@@ -190,3 +190,19 @@ class Linear(object):
         print form
         return smf.ols(formula=form,
                         data=df).fit()
+
+    def cval(self, X, y, folds=10):
+        """Performs a kfold cross validation using a linear regression on a target variable (y) given a matrix of features (X)
+        returns the a dict of containing 'r2', 'mean_absolute_error', and 'mean_squared_error' for each fold.
+        """
+
+        clf = linear_model.LinearRegression()
+        scores = {'r2': [], 'mean_absolute_error': [], 'mean_squared_error': []}
+
+        for score in scores.keys():
+            scores[score] = cross_validation.cross_val_score(clf, X, y, scoring=score, cv=folds)
+
+        return scores
+
+
+
