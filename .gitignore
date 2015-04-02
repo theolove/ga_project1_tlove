@@ -55,3 +55,6 @@ target/
 
 # OS X directory data
 .DS_Store
+
+# Python config file with confidential info
+config.py
